@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IoT CCTV</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-video"></i>
+                <h1>Dashboard IoT CCTV</h1>
+            </div>
+            <div class="status-controls">
+                <div id="connectionStatus" class="status-indicator offline">
+                    <span class="dot offline"></span> Offline
+                </div>
+                <button id="themeToggleBtn" class="action-btn"><i class="fas fa-moon"></i></button>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="panel camera-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-camera"></i> Kamera</h2>
+                    <div class="panel-actions">
+                        <button id="captureBtn" class="action-btn primary-btn"><i class="fas fa-camera"></i></button>
+                        <button id="flashBtn" class="action-btn warning-btn"><i class="fas fa-lightbulb"></i></button>
+                        <button id="streamToggleBtn" class="action-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                </div>
+                <div class="camera-container">
+                    <img id="cameraFeed" alt="Camera Feed">
+                    <canvas id="faceCanvas" style="display:none;"></canvas>
+                    <span id="streamIndicator" class="stream-indicator hidden">LIVE</span>
+                </div>
+            </div>
+
+            <div class="panel detection-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-eye"></i> Deteksi Terbaru</h2>
+                </div>
+                <div class="time-display" id="detectionTime"></div>
+                <div class="detection-details" id="detectionResults">
+                    <p class="empty-history">Belum ada yang terdeteksi</p>
+                </div>
+            </div>
+
+            <div class="panel stats-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-chart-bar"></i> Statistik</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-walking"></i></div>
+                        <div>
+                            <div class="stat-value" id="motionCount">0</div>
+                            <div class="stat-label">Gerakan Terdeteksi</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon known"><i class="fas fa-user-check"></i></div>
+                        <div>
+                            <div class="stat-value" id="knownFaces">0</div>
+                            <div class="stat-label">Wajah Dikenal</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon unknown"><i class="fas fa-user-times"></i></div>
+                        <div>
+                            <div class="stat-value" id="unknownFaces">0</div>
+                            <div class="stat-label">Wajah Tidak Dikenal</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon with-mask"><i class="fas fa-mask"></i></div>
+                        <div>
+                            <div class="stat-value" id="withMask">0</div>
+                            <div class="stat-label">Pakai Masker</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel system-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-cogs"></i> Status Sistem</h2>
+                </div>
+                <div class="system-status">
+                    <div class="status-item">
+                        <span>ESP32-CAM:</span>
+                        <span id="cameraStatus" class="status-badge offline">Offline</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Sensor PIR:</span>
+                        <span id="sensorStatus" class="status-badge offline">Offline</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Buzzer:</span>
+                        <span id="buzzerStatus" class="status-badge offline">Offline</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Telegram:</span>
+                        <span id="telegramStatus" class="status-badge offline">Offline</span>
+                    </div>
+                </div>
+                <div class="system-actions">
+                    <button id="testAlarmBtn" class="btn primary-btn"><i class="fas fa-bell"></i> Tes Buzzer</button>
+                    <button id="testNotificationBtn" class="btn warning-btn"><i class="fas fa-paper-plane"></i> Tes Notifikasi</button>
+                </div>
+            </div>
+
+            <div class="panel about-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-info-circle"></i> Tentang</h2>
+                </div>
+                <div class="about-content">
+                    <p>Sistem IoT CCTV menggunakan ESP32-CAM untuk mendeteksi wajah dan pengenalan wajah. Fitur utama:</p>
+                    <ul>
+                        <li>Live video dan pengambilan gambar dari ESP32-CAM</li>
+                        <li>Deteksi wajah, usia, jenis kelamin, dan penggunaan masker</li>
+                        <li>Pengiriman notifikasi instan ke Telegram</li>
+                        <li>Dukungan mode gelap/terang</li>
+                    </ul>
+                    <p>Sistem ini dirancang untuk memberikan kemudahan dalam pemantauan IoT CCTV.</p>
+                </div>
+            </div>
+
+            <div class="panel history-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-history"></i> Riwayat Deteksi</h2>
+                </div>
+                <div class="history-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Wajah</th>
+                                <th>Usia</th>
+                                <th>Gender</th>
+                                <th>Masker</th>
+                                <th>Keyakinan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr><td colspan="6" class="empty-history">Belum Ada Riwayat Deteksi</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            IoT CCTV © 2025 | Created By Niko Dwicahyo Widiyanto.
+        </footer>
+    </div>
+
+    <div id="toast-container"></div>
+    <div id="loadingOverlay" style="display:none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Processing...</div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modalImage" alt="Detection Image">
+            <div id="modalDetails" class="modal-details"></div>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

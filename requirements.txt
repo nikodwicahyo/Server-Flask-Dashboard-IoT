@@ -1,0 +1,23 @@
+# Web framework and server
+Flask==3.0.3
+Flask-Cors==5.0.0
+Werkzeug==3.0.4
+gunicorn==23.0.0
+python-dotenv==1.0.1
+
+# Core AI & ML packages
+numpy==1.26.4
+tensorflow==2.18.0
+tf-keras==2.18.0
+keras==3.6.0
+deepface==0.0.93
+opencv-python-headless
+scikit-learn==1.5.2
+ultralytics==8.3.13
+pandas==2.2.3
+tqdm==4.66.5
+
+# Image processing & I/O
+Pillow==10.4.0
+joblib==1.4.2
+requests==2.32.3
