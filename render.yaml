@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: flask-iot-cctv
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
-    envVars:
-      - key: PORT
-        value: 10000  # Render akan override ini secara otomatis
